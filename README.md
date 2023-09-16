@@ -1,2 +1,2 @@
-# curso-jdev-treinamento
+# projeto-spring-boot
 Java project with Spring Boot
