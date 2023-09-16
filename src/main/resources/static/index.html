@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+
+<head>
+	<title>TODO supply a title</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+		
+	<Style>
+		html{
+			margin-top: 5%;
+		}
+	</Style>
+</head>
+
+<body>
+	<form action="" id="formCadastroUser" class="container">
+		<h3>Spring Boot REST API CRUD Completo Jdev :D é</h3>
+		<div class="input-group input-group-sm mb-3">
+			<label class="input-group-text" id="inputGroup-sizing-sm" for="id">ID</label>
+			<input readonly="readonly" id="id" type="text" class="form-control" aria-label="Sizing example input"
+				aria-describedby="inputGroup-sizing-sm">
+		</div>
+		<div class="input-group input-group-sm mb-3">
+			<label class="input-group-text" id="inputGroup-sizing-sm" for="nome">Nome</label>
+			<input id="nome" type="text" class="form-control" required="required" aria-label="Sizing example input"
+				aria-describedby="inputGroup-sizing-sm">
+		</div>
+		<div class="input-group input-group-sm mb-3">
+			<label class="input-group-text" id="inputGroup-sizing-sm" for="idade">Idade</label>
+			<input id="idade" type="number" class="form-control" required="required" aria-label="Sizing example input"
+				aria-describedby="inputGroup-sizing-sm">
+		</div>
+
+		<button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button>
+		<button type="button" class="btn btn-secondary" onclick="this.form.reset();">Novo</button>
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Buscar
+			Cliente</button>
+			<button type="button" class="btn btn-danger" onclick="deletarUsuarioTela()">Deletar Usuario</button>
+
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Buscar Clientes Cadastrados</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form>
+							<div class="mb-3">
+								<label for="recipient-name" class="col-form-label">Nome: </label>
+								<input type="text" class="form-control" id="nomeBusca" required="required">
+							</div>
+						</form>
+						<div style="height: 300px; overflow: scroll">
+							<table class="table" id="tabelaResultado">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Nome</th>
+									<th scope="col">Idade</th>
+									<th scope="col">editar</th>
+									<th scope="col">delete</th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+						</div>
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" onclick="buscarClientes()">Buscar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</form>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+		crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script>
+		function salvarUsuario() {
+			let id = $("#id").val();
+			let nome = $("#nome").val();
+			let idade = $("#idade").val();
+			
+			if(!nome.trim() ){
+				$("#nome").focus();
+				alert('Preencha um nome!')
+				return
+			}
+			if(!idade){
+				$("#idade").focus();
+				alert('Preencha a idade!')				
+				return
+			}
+			let data = {
+				id, idade, nome
+			};
+
+			reqAjax("POST", "salvar", data).then((data) => {
+
+				let newData = JSON.parse(data)
+				console.log('res newData ', newData.id)
+				$("#id").val(newData.id);
+
+			}).catch((error) => {
+				console.log('err: ', error)
+			})
+		}
+
+		async function buscarClientes() {
+			console.log('buscarClientes');
+
+			let formData = new FormData();
+			let nomeBusca = $("#nomeBusca").val();
+
+			if (nomeBusca == null || nomeBusca.trim() == '') {
+				return;
+			}
+
+			formData.append('name', nomeBusca);
+			console.log('nomeBusca: ', nomeBusca)
+			reqAjax("GET", "buscarpornome" + "?name=" + nomeBusca, null).then((data) => {
+				console.log('data: ', data)
+				$("#tabelaResultado > tbody > tr").remove()
+
+				for (let i = 0; i < data.length; i++) {
+					$("#tabelaResultado > tbody").append('<tr id="'+data[i].id+'"><td>' + data[i].id + "</td><td>" + data[i].nome + "</td><td>" + data[i].idade + '</td><td><button type="button" class="btn btn-outline-info" onclick="editarUsuario('+data[i].id+')" >editar</button></td><td><button type="button" class="btn btn-danger" onclick="deletarUsuario('+data[i].id+')">Deletar</button></td></tr>');
+				}
+			}).catch((error) => {
+				console.log('err: ', error)
+			})
+		}
+
+		async function editarUsuario(id) {
+			console.log('editarUsuario')
+			console.log('id', id)
+			
+			let usuario = await reqAjax("GET", "buscaruserid"+ "?iduser=" + id, null)
+			if(!usuario){
+				return
+			}
+			console.log('res: ', usuario)
+			
+			$("#id").val(usuario.id);
+			$("#nome").val(usuario.nome);
+			$("#idade").val(usuario.idade);
+			
+			$("#exampleModal").modal('hide')
+		}
+		
+		async function deletarUsuario(id) {
+			console.log('deletarUsuario')
+			
+			if(!confirm('Deseja realmente deletar o usuário do banco de dados?')) return
+			
+			let resDeleteUser = await reqAjax("DELETE", "delete"+"?iduser="+id, null)
+			console.log('resDeleteUser: ', resDeleteUser)
+			
+			$('#'+id).remove()
+			
+			alert(resDeleteUser)
+		}
+		
+		async function deletarUsuarioTela() {
+			let id = $('#id').val()
+			if(!id)return
+			deletarUsuario(id)
+			
+			document.getElementById('formCadastroUser').reset()
+		}
+
+		async function reqAjax(method, endpoint, data) {
+			return new Promise((resolve, reject) => {
+				console.log('reqAjax');
+
+				let url = "http://localhost:8000/curso-jdev-treinamento/" + endpoint;
+				$.ajax({
+					type: method,
+					url: url,
+					data: data && data != '' ? JSON.stringify(data) : null,
+					success: (res) => {
+						resolve(res);
+					},
+					error: (err) => {
+						reject(err);
+					},
+					contentType: "application/json; charset=utf-8"
+				})
+			})
+			return;
+			let url = "http://localhost:8000/curso-jdev-treinamento/" + endpoint;
+			$.ajax({
+				type: method,
+				url: url,
+				data: data && data != '' ? JSON.stringify(data) : null,
+				success: (res) => {
+					console.log('res from post by ajax: ', res);
+					/*$("#id").val(res.id);
+					 alert('Salvo com sucesso!');*/
+					return JSON.stringify(res);
+				},
+				contentType: "application/json; charset=utf-8"
+			})
+				.fail((xhr, status, errorThorw) => {
+					console.log('error', errorThrow);
+					return status;
+				});
+
+		}
+	</script>
+</body>
+
+</html>
