@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: br.com.springboot.cursojdevtreinamento.CursoJdevTreinamentoApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.994 s - in br.com.springboot.cursojdevtreinamento.CursoJdevTreinamentoApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.872 s - in br.com.springboot.cursojdevtreinamento.CursoJdevTreinamentoApplicationTests
