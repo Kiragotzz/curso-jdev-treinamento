@@ -11,20 +11,122 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-		
+
 	<Style>
-		html{
+		html {
 			margin-top: 5%;
+		}
+
+		.block {
+			cursor: unset;
+			background-color: #a3a3a3;
+		}
+
+		/* TOAST */
+		body {
+			display: flex;
+			/* Center according to the main axis */
+			justify-content: center;
+			/* Center according to the secondary axis */
+			align-items: center;
+		}
+
+		/* The snackbar - position it at the bottom and in the middle of the screen */
+		#snackbar {
+			visibility: hidden;
+			/* Hidden by default. Visible on click */
+			min-width: 250px;
+			/* Set a default minimum width */
+			margin-left: -125px;
+			/* Divide value of min-width by 2 */
+			background-color: #333;
+			/* Black background color */
+			color: #fff;
+			/* White text color */
+			text-align: center;
+			/* Centered text */
+			border-radius: 2px;
+			/* Rounded borders */
+			padding: 16px;
+			/* Padding */
+			position: fixed;
+			/* Sit on top of the screen */
+			z-index: 1;
+			/* Add a z-index if needed */
+			left: 50%;
+			/* Center the snackbar */
+			bottom: 30px;
+			/* 30px from the bottom */
+		}
+
+		/* Show the snackbar when clicking on a button (class added with JavaScript) */
+		div .show {
+			visibility: visible !important;
+			/* Show the snackbar */
+
+			/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+However, delay the fade out process for 2.5 seconds */
+			-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+			animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		}
+
+		/* Animations to fade the snackbar in and out */
+		@-webkit-keyframes fadein {
+			from {
+				bottom: 0;
+				opacity: 0;
+			}
+
+			to {
+				bottom: 30px;
+				opacity: 1;
+			}
+		}
+
+		@keyframes fadein {
+			from {
+				bottom: 0;
+				opacity: 0;
+			}
+
+			to {
+				bottom: 30px;
+				opacity: 1;
+			}
+		}
+
+		@-webkit-keyframes fadeout {
+			from {
+				bottom: 30px;
+				opacity: 1;
+			}
+
+			to {
+				bottom: 0;
+				opacity: 0;
+			}
+		}
+
+		@keyframes fadeout {
+			from {
+				bottom: 30px;
+				opacity: 1;
+			}
+
+			to {
+				bottom: 0;
+				opacity: 0;
+			}
 		}
 	</Style>
 </head>
 
 <body>
 	<form action="" id="formCadastroUser" class="container">
-		<h3>Spring Boot REST API CRUD Completo Jdev :D é</h3>
+		<h3>CRUD simples pessoa e idade</h3>
 		<div class="input-group input-group-sm mb-3">
 			<label class="input-group-text" id="inputGroup-sizing-sm" for="id">ID</label>
-			<input readonly="readonly" id="id" type="text" class="form-control" aria-label="Sizing example input"
+			<input readonly="readonly" id="id" type="text" class="form-control block" aria-label="Sizing example input"
 				aria-describedby="inputGroup-sizing-sm">
 		</div>
 		<div class="input-group input-group-sm mb-3">
@@ -38,12 +140,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 				aria-describedby="inputGroup-sizing-sm">
 		</div>
 
+		<!-- ACTIONS BUTTONS -->
 		<button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button>
 		<button type="button" class="btn btn-secondary" onclick="this.form.reset();">Novo</button>
 		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Buscar
 			Cliente</button>
-			<button type="button" class="btn btn-danger" onclick="deletarUsuarioTela()">Deletar Usuario</button>
+		<button type="button" class="btn btn-danger" onclick="deletarUsuarioTela()">Deletar Usuario</button>
+		<button type="button" class="btn btn-danger" onclick="toastMsg('Teste botao toast')">Teste Toast</button>
 
+		<!-- MODAL -->
 		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -60,25 +165,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 						</form>
 						<div style="height: 300px; overflow: scroll">
 							<table class="table" id="tabelaResultado">
-							<thead>
-								<tr>
-									<th scope="col">ID</th>
-									<th scope="col">Nome</th>
-									<th scope="col">Idade</th>
-									<th scope="col">editar</th>
-									<th scope="col">delete</th>
-								</tr>
-							</thead>
-							<tbody>
+								<thead>
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">Nome</th>
+										<th scope="col">Idade</th>
+										<th scope="col">editar</th>
+										<th scope="col">delete</th>
+									</tr>
+								</thead>
+								<tbody>
 
-							</tbody>
-						</table>
+								</tbody>
+							</table>
 						</div>
-						
+
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary" onclick="buscarClientes()">Buscar</button>
+						<button type="button" class="btn btn-primary" onclick="buscarClientesNew()">Buscar</button>
 					</div>
 				</div>
 			</div>
@@ -86,144 +191,215 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 	</form>
 
+	<!-- TOAST -->
+	<div>
+		<div id="snackbar">Some text some message..</div>
+	</div>
+</body>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-		crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-	<script>
-		function salvarUsuario() {
-			let id = $("#id").val();
-			let nome = $("#nome").val();
-			let idade = $("#idade").val();
-			
-			if(!nome.trim() ){
-				$("#nome").focus();
-				alert('Preencha um nome!')
-				return
-			}
-			if(!idade){
-				$("#idade").focus();
-				alert('Preencha a idade!')				
-				return
-			}
-			let data = {
-				id, idade, nome
-			};
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+	function salvarUsuario() {
+		let id = $("#id").val();
+		let nome = $("#nome").val();
+		let idade = $("#idade").val();
 
-			reqAjax("POST", "salvar", data).then((data) => {
-
-				let newData = JSON.parse(data)
-				console.log('res newData ', newData.id)
-				$("#id").val(newData.id);
-
-			}).catch((error) => {
-				console.log('err: ', error)
-			})
+		if (!nome.trim()) {
+			$("#nome").focus();
+			alert('Preencha um nome!')
+			return
 		}
-
-		async function buscarClientes() {
-			console.log('buscarClientes');
-
-			let formData = new FormData();
-			let nomeBusca = $("#nomeBusca").val();
-
-			if (nomeBusca == null || nomeBusca.trim() == '') {
-				return;
-			}
-
-			formData.append('name', nomeBusca);
-			console.log('nomeBusca: ', nomeBusca)
-			reqAjax("GET", "buscarpornome" + "?name=" + nomeBusca, null).then((data) => {
-				console.log('data: ', data)
-				$("#tabelaResultado > tbody > tr").remove()
-
-				for (let i = 0; i < data.length; i++) {
-					$("#tabelaResultado > tbody").append('<tr id="'+data[i].id+'"><td>' + data[i].id + "</td><td>" + data[i].nome + "</td><td>" + data[i].idade + '</td><td><button type="button" class="btn btn-outline-info" onclick="editarUsuario('+data[i].id+')" >editar</button></td><td><button type="button" class="btn btn-danger" onclick="deletarUsuario('+data[i].id+')">Deletar</button></td></tr>');
-				}
-			}).catch((error) => {
-				console.log('err: ', error)
-			})
+		if (!idade) {
+			$("#idade").focus();
+			alert('Preencha a idade!')
+			return
 		}
+		let data = {
+			id, idade, nome
+		};
 
-		async function editarUsuario(id) {
-			console.log('editarUsuario')
-			console.log('id', id)
-			
-			let usuario = await reqAjax("GET", "buscaruserid"+ "?iduser=" + id, null)
-			if(!usuario){
-				return
-			}
-			console.log('res: ', usuario)
-			
-			$("#id").val(usuario.id);
-			$("#nome").val(usuario.nome);
-			$("#idade").val(usuario.idade);
-			
-			$("#exampleModal").modal('hide')
-		}
-		
-		async function deletarUsuario(id) {
-			console.log('deletarUsuario')
-			
-			if(!confirm('Deseja realmente deletar o usuário do banco de dados?')) return
-			
-			let resDeleteUser = await reqAjax("DELETE", "delete"+"?iduser="+id, null)
-			console.log('resDeleteUser: ', resDeleteUser)
-			
-			$('#'+id).remove()
-			
-			alert(resDeleteUser)
-		}
-		
-		async function deletarUsuarioTela() {
-			let id = $('#id').val()
-			if(!id)return
-			deletarUsuario(id)
-			
-			document.getElementById('formCadastroUser').reset()
-		}
+		reqAjax("POST", "salvar", data).then((data) => {
+			console.log('res data ', data.id)
+			$("#id").val(data.id);
+			toastMsg('Cliente salvo')
+		})
+	}
 
-		async function reqAjax(method, endpoint, data) {
-			return new Promise((resolve, reject) => {
-				console.log('reqAjax');
+	async function buscarClientes() {
+		console.log('buscarClientes');
 
-				let url = "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + endpoint;
-				$.ajax({
-					type: method,
-					url: url,
-					data: data && data != '' ? JSON.stringify(data) : null,
-					success: (res) => {
-						resolve(res);
-					},
-					error: (err) => {
-						reject(err);
-					},
-					contentType: "application/json; charset=utf-8"
-				})
-			})
+		let formData = new FormData();
+		let nomeBusca = $("#nomeBusca").val();
+
+		if (nomeBusca == null || nomeBusca.trim() == '') {
 			return;
+		}
+
+		formData.append('name', nomeBusca);
+		console.log('nomeBusca: ', nomeBusca)
+		reqAjax("GET", "buscarpornome" + "?name=" + nomeBusca, null).then((data) => {
+			console.log('data: ', data)
+			$("#tabelaResultado > tbody > tr").remove()
+
+			for (let i = 0; i < data.length; i++) {
+				$("#tabelaResultado > tbody").append('<tr id="' + data[i].id + '"><td>' + data[i].id + "</td><td>" + data[i].nome + "</td><td>" + data[i].idade + '</td><td><button type="button" class="btn btn-outline-info" onclick="editarUsuario(' + data[i].id + ')" >editar</button></td><td><button type="button" class="btn btn-danger" onclick="deletarUsuario(' + data[i].id + ')">Deletar</button></td></tr>');
+			}
+		}).catch((error) => {
+			console.log('err: ', error)
+		})
+	}
+
+	async function buscarClientesNew() {
+		console.log('buscarClientes');
+
+		let formData = new FormData();
+		let nomeBusca = $("#nomeBusca").val();
+
+		if (nomeBusca == null || nomeBusca.trim() == '') {
+			return;
+		}
+
+		formData.append('name', nomeBusca);
+		console.log('nomeBusca: ', nomeBusca)
+
+		var settings = {
+			"async": true,
+			"crossDomain": true,
+			"url": "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + "buscarpornome" + "?name=" + nomeBusca,
+			"method": "GET",
+			"headers": {
+				"cache-control": "no-cache"
+			}
+		}
+
+		$.ajax(settings).done(function (response) {
+			console.log(response);
+		})
+
+	}
+
+	async function editarUsuario(id) {
+		console.log('editarUsuario')
+		console.log('id', id)
+
+		let usuario = await reqAjax("GET", "buscaruserid" + "?iduser=" + id, null)
+		if (!usuario) {
+			return
+		}
+		console.log('res: ', usuario)
+
+		$("#id").val(usuario.id);
+		$("#nome").val(usuario.nome);
+		$("#idade").val(usuario.idade);
+
+		$("#exampleModal").modal('hide')
+	}
+
+	async function deletarUsuario(id) {
+		console.log('deletarUsuario')
+
+		if (!confirm('Deseja realmente deletar o usuário do banco de dados?')) return
+
+		let resDeleteUser = await reqAjax("DELETE", "delete" + "?iduser=" + id, null)
+		console.log('resDeleteUser: ', resDeleteUser)
+
+		$('#' + id).remove()
+		toastMsg(resDeleteUser)
+	}
+
+	async function deletarUsuarioTela() {
+		let id = $('#id').val()
+		if (!id) return
+		deletarUsuario(id)
+
+		document.getElementById('formCadastroUser').reset()
+		toastMsg('Cliente removido')
+	}
+
+	async function reqAjaxNew(method, endpoint, data) {
+		return new Promise((resolve, reject) => {
+			console.log("🚀 ~ endpoint:", endpoint)
+			console.log('reqAjax');
+			console.log('chegou aqui')
+
+			let url = "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + endpoint;
+			// let url = "http://localhost:8000/curso-jdev-treinamento/" + endpoint;
+
+			$.ajax({
+				type: method,
+				url: url,
+				'dataType': "jsonp",
+				"async": true,
+				"crossDomain": true,
+				"headers": {
+					"accept": "application/json",
+					"Access-Control-Allow-Origin": "*"
+				},
+				success: (res) => {
+					resolve(res);
+				},
+				error: (err) => {
+					console.log('err: ', err);
+					reject(err);
+				},
+				contentType: "application/json; charset=utf-8"
+			})
+		})
+	}
+
+	async function reqAjax(method, endpoint, data) {
+		return new Promise((resolve, reject) => {
+			console.log('reqAjax');
+
 			let url = "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + endpoint;
 			$.ajax({
 				type: method,
 				url: url,
 				data: data && data != '' ? JSON.stringify(data) : null,
 				success: (res) => {
-					console.log('res from post by ajax: ', res);
-					/*$("#id").val(res.id);
-					 alert('Salvo com sucesso!');*/
-					return JSON.stringify(res);
+					resolve(res);
+				},
+				error: (err) => {
+					reject(err);
 				},
 				contentType: "application/json; charset=utf-8"
 			})
-				.fail((xhr, status, errorThorw) => {
-					console.log('error', errorThrow);
-					return status;
-				});
+		})
+		return;
+		let url = "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + endpoint;
+		$.ajax({
+			type: method,
+			url: url,
+			data: data && data != '' ? JSON.stringify(data) : null,
+			success: (res) => {
+				console.log('res from post by ajax: ', res);
+				/*$("#id").val(res.id);
+				 alert('Salvo com sucesso!');*/
+				return JSON.stringify(res);
+			},
+			contentType: "application/json; charset=utf-8"
+		})
+			.fail((xhr, status, errorThorw) => {
+				console.log('error', errorThrow);
+				return status;
+			});
 
-		}
-	</script>
+	}
+	function toastMsg(msg) {
+		// Get the snackbar DIV
+		var x = document.getElementById("snackbar")
+
+		// Add the "show" class to DIV
+		x.className = "show";
+		x.innerText = msg;
+
+		// After 3 seconds, remove the show class from DIV
+		setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+	}
+</script>
 </body>
 
 </html>
