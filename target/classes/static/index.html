@@ -17,6 +17,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 			margin-top: 5%;
 		}
 
+		.divTable {
+			max-width: 900px;
+			max-height: 600px;
+			overflow: scroll
+		}
+
 		.block {
 			cursor: unset;
 			background-color: #a3a3a3;
@@ -24,11 +30,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 		/* TOAST */
 		body {
+
 			display: flex;
 			/* Center according to the main axis */
 			justify-content: center;
 			/* Center according to the secondary axis */
 			align-items: center;
+		}
+
+		.container {
+			max-width: 900px;
 		}
 
 		/* The snackbar - position it at the bottom and in the middle of the screen */
@@ -124,67 +135,62 @@ However, delay the fade out process for 2.5 seconds */
 <body>
 	<form action="" id="formCadastroUser" class="container">
 		<h3>CRUD simples pessoa e idade</h3>
-		<div class="input-group input-group-sm mb-3">
-			<label class="input-group-text" id="inputGroup-sizing-sm" for="id">ID</label>
-			<input readonly="readonly" id="id" type="text" class="form-control block" aria-label="Sizing example input"
-				aria-describedby="inputGroup-sizing-sm">
-		</div>
-		<div class="input-group input-group-sm mb-3">
-			<label class="input-group-text" id="inputGroup-sizing-sm" for="nome">Nome</label>
-			<input id="nome" type="text" class="form-control" required="required" aria-label="Sizing example input"
-				aria-describedby="inputGroup-sizing-sm">
-		</div>
-		<div class="input-group input-group-sm mb-3">
-			<label class="input-group-text" id="inputGroup-sizing-sm" for="idade">Idade</label>
-			<input id="idade" type="number" class="form-control" required="required" aria-label="Sizing example input"
-				aria-describedby="inputGroup-sizing-sm">
+
+		<div class="divTable" style="">
+			<table class="table" id="tabelaResultado">
+				<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Nome</th>
+						<th scope="col">Idade</th>
+						<th scope="col">editar</th>
+						<th scope="col">delete</th>
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
 		</div>
 
 		<!-- ACTIONS BUTTONS -->
-		<button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button>
-		<button type="button" class="btn btn-secondary" onclick="this.form.reset();">Novo</button>
-		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Buscar
-			Cliente</button>
-		<button type="button" class="btn btn-danger" onclick="deletarUsuarioTela()">Deletar Usuario</button>
-		<button type="button" class="btn btn-danger" onclick="toastMsg('Teste botao toast')">Teste Toast</button>
+		<!-- <button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button> -->
+		<!-- <button type="button" class="btn btn-secondary" onclick="this.form.reset();">Novo</button> -->
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Adicionar Pessoa</button>
+		<!-- <button type="button" class="btn btn-danger" onclick="deletarUsuarioTela()">Deletar Usuario</button>
+		<button type="button" class="btn btn-danger" onclick="toastMsg('Teste botao toast')">Teste Toast</button> -->
 
 		<!-- MODAL -->
 		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="exampleModalLabel">Buscar Clientes Cadastrados</h1>
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Novo Usuário</h1>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<form>
 							<div class="mb-3">
-								<label for="recipient-name" class="col-form-label">Nome: </label>
-								<input type="text" class="form-control" id="nomeBusca" required="required">
+								<div class="input-group input-group-sm mb-3">
+									<label class="input-group-text" id="inputGroup-sizing-sm" for="id">ID</label>
+									<input disabled readonly="readonly" id="id" type="text" class="form-control block" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+								</div>
+								<div class="input-group input-group-sm mb-3">
+									<label class="input-group-text" id="inputGroup-sizing-sm" for="nome">Nome</label>
+									<input id="nome" type="text" class="form-control" required="required" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+								</div>
+								<div class="input-group input-group-sm mb-3">
+									<label class="input-group-text" id="inputGroup-sizing-sm" for="idade">Idade</label>
+									<input id="idade" type="number" class="form-control" required="required" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+								</div>
 							</div>
 						</form>
-						<div style="height: 300px; overflow: scroll">
-							<table class="table" id="tabelaResultado">
-								<thead>
-									<tr>
-										<th scope="col">ID</th>
-										<th scope="col">Nome</th>
-										<th scope="col">Idade</th>
-										<th scope="col">editar</th>
-										<th scope="col">delete</th>
-									</tr>
-								</thead>
-								<tbody>
-
-								</tbody>
-							</table>
-						</div>
 
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary" onclick="buscarClientesNew()">Buscar Local</button>
-						<button type="button" class="btn btn-primary" onclick="buscarClientes()">Buscar</button>
+						<button type="button" class="btn btn-secondary" onclick="this.form.reset();">Limpar</button>
+						<button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button>
 					</div>
 				</div>
 			</div>
@@ -203,6 +209,32 @@ However, delay the fade out process for 2.5 seconds */
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
 	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
+	//VARIAVEIS GLOBAIS
+	let isDev = false;
+	let urlRoot = "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/"
+
+	function constructor() {
+		// PEGANDO SE É DEV OU PROD
+		let isDev = document.URL.indexOf('https') >= 0 ? false : true
+		if (isDev) {
+			urlRoot = document.URL
+		}
+
+		//LISTANDO TODOS USUARIOS
+
+		reqAjax("GET", "listatodos", null).then((data) => {
+			console.log('data: ', data)
+			$("#tabelaResultado > tbody > tr").remove()
+
+			for (let i = 0; i < data.length; i++) {
+				$("#tabelaResultado > tbody").append('<tr id="' + data[i].id + '"><td>' + data[i].id + "</td><td>" + data[i].nome + "</td><td>" + data[i].idade + '</td><td><button type="button" class="btn btn-outline-info" onclick="editarUsuario(' + data[i].id + ')" >editar</button></td><td><button type="button" class="btn btn-danger" onclick="deletarUsuario(' + data[i].id + ')">Deletar</button></td></tr>');
+			}
+		}).catch((error) => {
+			console.log('err: ', error)
+		})
+	}
+	constructor()
+
 	function salvarUsuario() {
 		let id = $("#id").val();
 		let nome = $("#nome").val();
@@ -254,7 +286,7 @@ However, delay the fade out process for 2.5 seconds */
 	}
 
 	async function buscarClientesNew() {
-		console.log('buscarClientes');
+		console.log('buscarClientesNew');
 
 		let formData = new FormData();
 		let nomeBusca = $("#nomeBusca").val();
@@ -269,7 +301,7 @@ However, delay the fade out process for 2.5 seconds */
 		var settings = {
 			"async": true,
 			"crossDomain": true,
-			"url": "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + "buscarpornome" + "?name=" + nomeBusca,
+			"url": urlRoot + "buscarpornome" + "?name=" + nomeBusca,
 			"method": "GET",
 			"headers": {
 				"cache-control": "no-cache"
@@ -278,6 +310,12 @@ However, delay the fade out process for 2.5 seconds */
 
 		$.ajax(settings).done(function (response) {
 			console.log(response);
+			let data = response
+			$("#tabelaResultado > tbody > tr").remove()
+
+			for (let i = 0; i < data.length; i++) {
+				$("#tabelaResultado > tbody").append('<tr id="' + data[i].id + '"><td>' + data[i].id + "</td><td>" + data[i].nome + "</td><td>" + data[i].idade + '</td><td><button type="button" class="btn btn-outline-info" onclick="editarUsuario(' + data[i].id + ')" >editar</button></td><td><button type="button" class="btn btn-danger" onclick="deletarUsuario(' + data[i].id + ')">Deletar</button></td></tr>');
+			}
 		})
 
 	}
@@ -295,8 +333,11 @@ However, delay the fade out process for 2.5 seconds */
 		$("#id").val(usuario.id);
 		$("#nome").val(usuario.nome);
 		$("#idade").val(usuario.idade);
+		$("#exampleModalLabel").text("Edição Usuário")
+		console.log("🚀 ~ $('#exampleModalLabel'):", $("#exampleModalLabel"))
 
-		$("#exampleModal").modal('hide')
+
+		$("#exampleModal").modal('show')
 	}
 
 	async function deletarUsuario(id) {
@@ -326,7 +367,7 @@ However, delay the fade out process for 2.5 seconds */
 			console.log('reqAjax');
 			console.log('chegou aqui')
 
-			let url = "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + endpoint;
+			let url = urlRoot + endpoint;
 			// let url = "http://localhost:8000/curso-jdev-treinamento/" + endpoint;
 
 			$.ajax({
@@ -355,7 +396,7 @@ However, delay the fade out process for 2.5 seconds */
 		return new Promise((resolve, reject) => {
 			console.log('reqAjax');
 
-			let url = "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + endpoint;
+			let url = urlRoot + endpoint;
 			$.ajax({
 				type: method,
 				url: url,
@@ -369,26 +410,8 @@ However, delay the fade out process for 2.5 seconds */
 				contentType: "application/json; charset=utf-8"
 			})
 		})
-		return;
-		let url = "https://spring-boot-project-qn6f.onrender.com/curso-jdev-treinamento/" + endpoint;
-		$.ajax({
-			type: method,
-			url: url,
-			data: data && data != '' ? JSON.stringify(data) : null,
-			success: (res) => {
-				console.log('res from post by ajax: ', res);
-				/*$("#id").val(res.id);
-				 alert('Salvo com sucesso!');*/
-				return JSON.stringify(res);
-			},
-			contentType: "application/json; charset=utf-8"
-		})
-			.fail((xhr, status, errorThorw) => {
-				console.log('error', errorThrow);
-				return status;
-			});
-
 	}
+
 	function toastMsg(msg) {
 		// Get the snackbar DIV
 		var x = document.getElementById("snackbar")
@@ -400,6 +423,7 @@ However, delay the fade out process for 2.5 seconds */
 		// After 3 seconds, remove the show class from DIV
 		setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
 	}
+
 </script>
 </body>
 
