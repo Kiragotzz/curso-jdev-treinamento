@@ -6,7 +6,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 <html>
 
 <head>
-	<title>TODO supply a title</title>
+	<title>CRUD Spring Boot</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -17,10 +17,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 			margin-top: 5%;
 		}
 
+		.btn-primary-main {
+			margin-top: 10px;
+		}
+
 		.divTable {
 			max-width: 900px;
 			max-height: 600px;
-			overflow: scroll
+			overflow-y: scroll
 		}
 
 		.block {
@@ -40,6 +44,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 		.container {
 			max-width: 900px;
+		}
+
+		.titleMain{
+			margin: 10px;
+			padding: 10px;
 		}
 
 		/* The snackbar - position it at the bottom and in the middle of the screen */
@@ -79,6 +88,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 However, delay the fade out process for 2.5 seconds */
 			-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
 			animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		}
+
+		/* Show the snackbar when clicking on a button (class added with JavaScript) */
+		div .showLonger {
+			visibility: visible !important;
+			/* Show the snackbar */
+
+			/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+However, delay the fade out process for 2.5 seconds */
+			-webkit-animation: fadein 0.5s, fadeout 0.5s 10s;
+			animation: fadein 0.5s, fadeout 0.5s 10s;
 		}
 
 		/* Animations to fade the snackbar in and out */
@@ -134,7 +154,7 @@ However, delay the fade out process for 2.5 seconds */
 
 <body>
 	<form action="" id="formCadastroUser" class="container">
-		<h3>CRUD simples pessoa e idade</h3>
+		<h3 class="titleMain">Cadastro de Pessoas</h3>
 
 		<div class="divTable" style="">
 			<table class="table" id="tabelaResultado">
@@ -156,7 +176,8 @@ However, delay the fade out process for 2.5 seconds */
 		<!-- ACTIONS BUTTONS -->
 		<!-- <button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button> -->
 		<!-- <button type="button" class="btn btn-secondary" onclick="this.form.reset();">Novo</button> -->
-		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Adicionar Pessoa</button>
+		<button type="button" class="btn btn-primary btn-primary-main" data-bs-toggle="modal"
+			data-bs-target="#exampleModal" onclick="openAdicionarPessoa()">Adicionar Pessoa</button>
 		<!-- <button type="button" class="btn btn-danger" onclick="deletarUsuarioTela()">Deletar Usuario</button>
 		<button type="button" class="btn btn-danger" onclick="toastMsg('Teste botao toast')">Teste Toast</button> -->
 
@@ -166,29 +187,34 @@ However, delay the fade out process for 2.5 seconds */
 				<div class="modal-content">
 					<div class="modal-header">
 						<h1 class="modal-title fs-5" id="exampleModalLabel">Novo Usuário</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+							onclick="this.form.reset();"></button>
 					</div>
 					<div class="modal-body">
 						<form>
 							<div class="mb-3">
 								<div class="input-group input-group-sm mb-3">
 									<label class="input-group-text" id="inputGroup-sizing-sm" for="id">ID</label>
-									<input disabled readonly="readonly" id="id" type="text" class="form-control block" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+									<input disabled readonly="readonly" id="id" type="text" class="form-control block"
+										aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
 								</div>
 								<div class="input-group input-group-sm mb-3">
 									<label class="input-group-text" id="inputGroup-sizing-sm" for="nome">Nome</label>
-									<input id="nome" type="text" class="form-control" required="required" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+									<input id="nome" type="text" class="form-control" required="required"
+										aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
 								</div>
 								<div class="input-group input-group-sm mb-3">
 									<label class="input-group-text" id="inputGroup-sizing-sm" for="idade">Idade</label>
-									<input id="idade" type="number" class="form-control" required="required" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+									<input id="idade" type="number" class="form-control" required="required"
+										aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
 								</div>
 							</div>
 						</form>
 
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+							onclick="this.form.reset();">Close</button>
 						<button type="button" class="btn btn-secondary" onclick="this.form.reset();">Limpar</button>
 						<button type="button" class="btn btn-primary" onclick="salvarUsuario()">Salvar</button>
 					</div>
@@ -257,6 +283,10 @@ However, delay the fade out process for 2.5 seconds */
 		reqAjax("POST", "salvar", data).then((data) => {
 			console.log('res data ', data.id)
 			$("#id").val(data.id);
+			if (!id) {
+				$("#tabelaResultado > tbody").append('<tr id="' + data.id + '"><td>' + data.id + "</td><td>" + nome + "</td><td>" + idade + '</td><td><button type="button" class="btn btn-outline-info" onclick="editarUsuario(' + data.id + ')" >editar</button></td><td><button type="button" class="btn btn-danger" onclick="deletarUsuario(' + data.id + ')">Deletar</button></td></tr>');
+			}
+
 			toastMsg('Cliente salvo')
 		})
 	}
@@ -328,14 +358,12 @@ However, delay the fade out process for 2.5 seconds */
 		if (!usuario) {
 			return
 		}
-		console.log('res: ', usuario)
+		// console.log('res: ', usuario)
 
 		$("#id").val(usuario.id);
 		$("#nome").val(usuario.nome);
 		$("#idade").val(usuario.idade);
 		$("#exampleModalLabel").text("Edição Usuário")
-		console.log("🚀 ~ $('#exampleModalLabel'):", $("#exampleModalLabel"))
-
 
 		$("#exampleModal").modal('show')
 	}
@@ -422,6 +450,22 @@ However, delay the fade out process for 2.5 seconds */
 
 		// After 3 seconds, remove the show class from DIV
 		setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+	}
+
+	function toastMsgLonga(msg) {
+		// Get the snackbar DIV
+		var x = document.getElementById("snackbar")
+
+		// Add the "show" class to DIV
+		x.className = "showLonger";
+		x.innerText = msg;
+
+		// After 3 seconds, remove the show class from DIV
+		setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+	}
+
+	function openAdicionarPessoa() {
+		$("#exampleModalLabel").text("Novo Usuário")
 	}
 
 </script>
